@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard1.0;netcoreapp1.0;net35</TargetFrameworks>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>kalexi</Authors>
+    <Company />
+    <Product />
+    <Description>Implementation of Either monad.</Description>
+    <PackageProjectUrl>https://github.com/kalexii/kalexi.Monads.Either</PackageProjectUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/kalexii/kalexi.Monads.Either.git</RepositoryUrl>
+  </PropertyGroup>
+
+</Project>
