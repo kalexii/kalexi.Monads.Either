@@ -10,6 +10,7 @@
     <PackageProjectUrl>https://github.com/kalexii/kalexi.Monads.Either</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/kalexii/kalexi.Monads.Either.git</RepositoryUrl>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
 </Project>
