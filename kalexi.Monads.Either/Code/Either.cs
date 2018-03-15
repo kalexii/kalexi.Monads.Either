@@ -61,6 +61,10 @@ namespace kalexi.Monads.Either.Code
         public TResult DoWithRight<TResult>(Func<TRight, TResult> function, TResult fallback = default(TResult))
             => actualEither.DoWithRight(function, fallback);
 
+        /// <inheritdoc />
+        public TResult Join<TResult>(Func<TLeft, TResult> leftTransform, Func<TRight, TResult> rightTransform) 
+            => actualEither.Join(leftTransform, rightTransform);
+
         public static implicit operator Either<TLeft, TRight>(TLeft value)
             => new Either<TLeft, TRight>(value);
 
@@ -120,6 +124,9 @@ namespace kalexi.Monads.Either.Code
 
         public TResult DoWithRight<TResult>(Func<TRight, TResult> function, TResult fallback = default(TResult))
             => fallback;
+
+        public TResult Join<TResult>(Func<TLeft, TResult> leftTransform, Func<TRight, TResult> rightTransform) 
+            => leftTransform(Left);
     }
 
     internal struct EitherRight<TLeft, TRight> : IEither<TLeft, TRight>
@@ -158,5 +165,8 @@ namespace kalexi.Monads.Either.Code
 
         public TResult DoWithRight<TResult>(Func<TRight, TResult> function, TResult fallback = default(TResult))
             => function(Right);
+
+        public TResult Join<TResult>(Func<TLeft, TResult> leftTransform, Func<TRight, TResult> rightTransform) 
+            => rightTransform(Right);
     }
 }

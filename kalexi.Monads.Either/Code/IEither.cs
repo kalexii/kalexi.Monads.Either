@@ -140,5 +140,21 @@ namespace kalexi.Monads.Either.Code
         /// <see cref="IsLeft" />.
         /// </param>
         TResult DoWithRight<TResult>(Func<TRight, TResult> function, TResult fallback = default(TResult));
+
+        /// <summary>
+        /// Transforms either <see cref="Left" /> or <see cref="Right" /> using <see cref="leftTransform" /> or
+        /// <see cref="rightTransform" /> correspondingly to produce value of a single type.
+        /// </summary>
+        /// <typeparam name="TResult">Type of produced value.</typeparam>
+        /// <param name="leftTransform">
+        /// Function that will be called if current instance of <see cref="IEither{TLeft,TRight}" />.
+        /// <see cref="IsLeft" />.
+        /// </param>
+        /// <param name="rightTransform">
+        /// Function that will be called if current instance of <see cref="IEither{TLeft,TRight}" />.
+        /// <see cref="IsRight" />.
+        /// </param>
+        /// <returns>Joined value transformed from any value that is contained by this instance of <see cref="IEither{TLeft,TRight}"/>.</returns>
+        TResult Join<TResult>(Func<TLeft, TResult> leftTransform, Func<TRight, TResult> rightTransform);
     }
 }
