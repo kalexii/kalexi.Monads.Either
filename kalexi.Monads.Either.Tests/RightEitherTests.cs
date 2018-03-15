@@ -34,7 +34,11 @@ namespace kalexi.Monads.Either.Tests
             AssertSwitchedRight(either);
             AssertMapRight(either);
             AssertNonAlteringMapRight(either);
+            AssertJoin(either);
         }
+
+        private static void AssertJoin(IEither<int, string> either) 
+            => Assert.That(either.Join(x => 1338, x => 1337), Is.EqualTo(1337));
 
         private static void AssertDoWithRightFunction(IEither<int, string> either)
             => Assert.That(either.DoWithRight(s => s), Is.EqualTo(value));
