@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
 using kalexi.Monads.Either.Exceptions;
 
 namespace kalexi.Monads.Either.Code
@@ -87,6 +88,12 @@ namespace kalexi.Monads.Either.Code
         IEither<TLeftResult, TRightResult> Map<TLeftResult, TRightResult>(Func<TLeft, TLeftResult> leftHandFunction,
                                                                           Func<TRight, TRightResult> rightHandFunction);
 
+        /// <inheritdoc cref="Map{TLeftResult,TRightResult}"/>
+        Task<IEither<TLeftResult, TRightResult>> MapAsync<TLeftResult, TRightResult>(
+            Func<TLeft, Task<TLeftResult>> leftHandFunction,
+            Func<TRight, Task<TRightResult>> rightHandFunction);
+
+
         /// <summary>
         /// If current instance of <see cref="IEither{TLeft,TRight}" />.<see cref="IsLeft" />,
         /// executes <see cref="action" /> passing <see cref="IEither{TLeft,TRight}" />.<see cref="Left" /> as argument.
@@ -156,5 +163,9 @@ namespace kalexi.Monads.Either.Code
         /// </param>
         /// <returns>Joined value transformed from any value that is contained by this instance of <see cref="IEither{TLeft,TRight}"/>.</returns>
         TResult Join<TResult>(Func<TLeft, TResult> leftTransform, Func<TRight, TResult> rightTransform);
+
+        /// <inheritdoc cref="Join{TResult}"/>
+        Task<TResult> JoinAsync<TResult>(Func<TLeft, Task<TResult>> leftTransform,
+                                         Func<TRight, Task<TResult>> rightTransform);
     }
 }
