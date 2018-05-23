@@ -1,80 +1,80 @@
 ﻿using System;
 using System.Threading.Tasks;
-using kalexi.Monads.Either.Exceptions;
 
 namespace kalexi.Monads.Either.Code
 {
+    /// <inheritdoc />
     public class Either<TLeft, TRight> : IEither<TLeft, TRight>
     {
-        private readonly IEither<TLeft, TRight> actualEither;
+        private readonly IEither<TLeft, TRight> eitherState;
 
         /// <summary>
         /// Initializes instance of <see cref="Either{TLeft,TRight}" /> with the left-hand <see cref="value" />.
         /// </summary>
         /// <param name="value">Left-hand value to initialize this instance of <see cref="IEither{TLeft,TRight}" /> with.</param>
-        public Either(TLeft value) => actualEither = new EitherLeft<TLeft, TRight>(value);
+        public Either(TLeft value) => eitherState = new EitherLeftState<TLeft, TRight>(value);
 
         /// <summary>
         /// Initializes instance of <see cref="Either{TLeft,TRight}" /> with the right-hand <see cref="value" />.
         /// </summary>
         /// <param name="value">Right-hand value to initialize this instance of <see cref="IEither{TLeft,TRight}" /> with.</param>
-        public Either(TRight value) => actualEither = new EitherRight<TLeft, TRight>(value);
+        public Either(TRight value) => eitherState = new EitherRightState<TLeft, TRight>(value);
 
         /// <inheritdoc />
-        public TLeft Left => actualEither.Left;
+        public TLeft Left => eitherState.Left;
 
         /// <inheritdoc />
-        public TRight Right => actualEither.Right;
+        public TRight Right => eitherState.Right;
 
         /// <inheritdoc />
-        public bool IsLeft => actualEither.IsLeft;
+        public bool IsLeft => eitherState.IsLeft;
 
         /// <inheritdoc />
-        public bool IsRight => actualEither.IsRight;
+        public bool IsRight => eitherState.IsRight;
 
         /// <inheritdoc />
         public void Switch(Action<TLeft> leftHandAction, Action<TRight> rightHandAction)
-            => actualEither.Switch(leftHandAction, rightHandAction);
+            => eitherState.Switch(leftHandAction, rightHandAction);
 
         /// <inheritdoc />
         public IEither<TLeft, TRight> NonAlteringMap(Func<TLeft, TLeft> leftHandFunction,
-                                                     Func<TRight, TRight> rightHandAction)
-            => actualEither.NonAlteringMap(leftHandFunction, rightHandAction);
+            Func<TRight, TRight> rightHandAction)
+            => eitherState.NonAlteringMap(leftHandFunction, rightHandAction);
 
         /// <inheritdoc />
         public IEither<TLeftResult, TRightResult> Map<TLeftResult, TRightResult>(
             Func<TLeft, TLeftResult> leftHandFunction, Func<TRight, TRightResult> rightHandFunction)
-            => actualEither.Map(leftHandFunction, rightHandFunction);
+            => eitherState.Map(leftHandFunction, rightHandFunction);
 
         /// <inheritdoc />
         public Task<IEither<TLeftResult, TRightResult>> MapAsync<TLeftResult, TRightResult>(
-            Func<TLeft, Task<TLeftResult>> leftHandFunction, Func<TRight, Task<TRightResult>> rightHandFunction) 
-            => actualEither.MapAsync(leftHandFunction, rightHandFunction);
+            Func<TLeft, Task<TLeftResult>> leftHandFunction, Func<TRight, Task<TRightResult>> rightHandFunction)
+            => eitherState.MapAsync(leftHandFunction, rightHandFunction);
 
         /// <inheritdoc />
         public void DoWithLeft(Action<TLeft> action)
-            => actualEither.DoWithLeft(action);
+            => eitherState.DoWithLeft(action);
 
         /// <inheritdoc />
         public TResult DoWithLeft<TResult>(Func<TLeft, TResult> function, TResult fallback = default(TResult))
-            => actualEither.DoWithLeft(function, fallback);
+            => eitherState.DoWithLeft(function, fallback);
 
         /// <inheritdoc />
         public void DoWithRight(Action<TRight> action)
-            => actualEither.DoWithRight(action);
+            => eitherState.DoWithRight(action);
 
         /// <inheritdoc />
         public TResult DoWithRight<TResult>(Func<TRight, TResult> function, TResult fallback = default(TResult))
-            => actualEither.DoWithRight(function, fallback);
+            => eitherState.DoWithRight(function, fallback);
 
         /// <inheritdoc />
         public TResult Join<TResult>(Func<TLeft, TResult> leftTransform, Func<TRight, TResult> rightTransform)
-            => actualEither.Join(leftTransform, rightTransform);
+            => eitherState.Join(leftTransform, rightTransform);
 
         /// <inheritdoc />
         public Task<TResult> JoinAsync<TResult>(Func<TLeft, Task<TResult>> leftTransform,
-                                     Func<TRight, Task<TResult>> rightTransform) 
-            => actualEither.JoinAsync(leftTransform, rightTransform);
+            Func<TRight, Task<TResult>> rightTransform)
+            => eitherState.JoinAsync(leftTransform, rightTransform);
 
         public static implicit operator Either<TLeft, TRight>(TLeft value)
             => new Either<TLeft, TRight>(value);
@@ -88,7 +88,7 @@ namespace kalexi.Monads.Either.Code
         /// <param name="value">Left-hand value to initialize the instance of <see cref="IEither{TLeft,TRight}" /> with.</param>
         /// <returns>An instance of <see cref="IEither{TLeft,TRight}" /> initialized with left-hand <see cref="value" /></returns>
         public static IEither<TLeft, TRight> CreateLeft(TLeft value)
-            => new EitherLeft<TLeft, TRight>(value);
+            => new EitherLeftState<TLeft, TRight>(value);
 
         /// <summary>
         /// Creates an instance of <see cref="IEither{TLeft,TRight}" /> initialized with right-hand <see cref="value" />.
@@ -96,105 +96,6 @@ namespace kalexi.Monads.Either.Code
         /// <param name="value">Right-hand value to initialize the instance of <see cref="IEither{TLeft,TRight}" /> with.</param>
         /// <returns>An instance of <see cref="IEither{TLeft,TRight}" /> initialized with right-hand <see cref="value" /></returns>
         public static IEither<TLeft, TRight> CreateRight(TRight value)
-            => new EitherRight<TLeft, TRight>(value);
-    }
-
-    internal struct EitherLeft<TLeft, TRight> : IEither<TLeft, TRight>
-    {
-        public EitherLeft(TLeft value) => Left = value;
-
-        public TLeft Left { get; }
-
-        public TRight Right => throw new EitherException("This either is Left, but client code requested Right");
-
-        public bool IsLeft => true;
-
-        public bool IsRight => false;
-
-        public void Switch(Action<TLeft> leftHandAction, Action<TRight> rightHandAction)
-            => leftHandAction(Left);
-
-        public IEither<TLeft, TRight> NonAlteringMap(Func<TLeft, TLeft> leftHandFunction,
-                                                     Func<TRight, TRight> rightHandAction)
-            => new EitherLeft<TLeft, TRight>(leftHandFunction(Left));
-
-        public IEither<TLeftResult, TRightResult> Map<TLeftResult, TRightResult>(
-            Func<TLeft, TLeftResult> leftHandFunction,
-            Func<TRight, TRightResult> rightHandFunction)
-            => new EitherLeft<TLeftResult, TRightResult>(leftHandFunction(Left));
-
-        public async Task<IEither<TLeftResult, TRightResult>> MapAsync<TLeftResult, TRightResult>(
-            Func<TLeft, Task<TLeftResult>> leftHandFunction,
-            Func<TRight, Task<TRightResult>> rightHandFunction)
-            => new EitherLeft<TLeftResult, TRightResult>(await leftHandFunction(Left));
-
-        public void DoWithLeft(Action<TLeft> action)
-            => action(Left);
-
-        public TResult DoWithLeft<TResult>(Func<TLeft, TResult> function, TResult fallback = default(TResult))
-            => function(Left);
-
-        public void DoWithRight(Action<TRight> action)
-        {
-        }
-
-        public TResult DoWithRight<TResult>(Func<TRight, TResult> function, TResult fallback = default(TResult))
-            => fallback;
-
-        public TResult Join<TResult>(Func<TLeft, TResult> leftTransform, Func<TRight, TResult> rightTransform)
-            => leftTransform(Left);
-
-        public async Task<TResult> JoinAsync<TResult>(Func<TLeft, Task<TResult>> leftTransform,
-                                                      Func<TRight, Task<TResult>> rightTransform)
-            => await leftTransform(Left);
-    }
-
-    internal struct EitherRight<TLeft, TRight> : IEither<TLeft, TRight>
-    {
-        public EitherRight(TRight value) => Right = value;
-
-        public TLeft Left => throw new EitherException("This either is Right, but client code requested Left");
-
-        public TRight Right { get; }
-
-        public bool IsLeft => false;
-
-        public bool IsRight => true;
-
-        public void Switch(Action<TLeft> leftHandAction, Action<TRight> right)
-            => right(Right);
-
-        public IEither<TLeft, TRight> NonAlteringMap(Func<TLeft, TLeft> leftHandFunction,
-                                                     Func<TRight, TRight> rightHandAction)
-            => new EitherRight<TLeft, TRight>(rightHandAction(Right));
-
-        public IEither<TLeftResult, TRightResult> Map<TLeftResult, TRightResult>(
-            Func<TLeft, TLeftResult> leftHandFunction,
-            Func<TRight, TRightResult> rightHandFunction)
-            => new EitherRight<TLeftResult, TRightResult>(rightHandFunction(Right));
-
-        public async Task<IEither<TLeftResult, TRightResult>> MapAsync<TLeftResult, TRightResult>(
-            Func<TLeft, Task<TLeftResult>> leftHandFunction, Func<TRight, Task<TRightResult>> rightHandFunction)
-            => new EitherRight<TLeftResult, TRightResult>(await rightHandFunction(Right));
-
-        public void DoWithLeft(Action<TLeft> action)
-        {
-        }
-
-        public TResult DoWithLeft<TResult>(Func<TLeft, TResult> function, TResult fallback = default(TResult))
-            => fallback;
-
-        public void DoWithRight(Action<TRight> action)
-            => action(Right);
-
-        public TResult DoWithRight<TResult>(Func<TRight, TResult> function, TResult fallback = default(TResult))
-            => function(Right);
-
-        public TResult Join<TResult>(Func<TLeft, TResult> leftTransform, Func<TRight, TResult> rightTransform)
-            => rightTransform(Right);
-
-        public async Task<TResult> JoinAsync<TResult>(Func<TLeft, Task<TResult>> leftTransform,
-                                                      Func<TRight, Task<TResult>> rightTransform)
-            => await rightTransform(Right);
+            => new EitherRightState<TLeft, TRight>(value);
     }
 }

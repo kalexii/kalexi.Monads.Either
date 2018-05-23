@@ -5,6 +5,9 @@ using kalexi.Monads.Either.Exceptions;
 
 namespace kalexi.Monads.Either.Code
 {
+    /// <summary>
+    /// Either monad encapsulates the outcome that can be of two different types. Either <see cref="TLeft"/> or <see cref="TRight"/>.
+    /// </summary>
     [SuppressMessage("ReSharper", "ExceptionNotThrown")]
     public interface IEither<TLeft, TRight>
     {
