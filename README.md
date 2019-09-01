@@ -28,3 +28,4 @@ Implementation notes:
 Todo:
  - Try implementing as a struct with if's and see if it will perform better.
  - Expand on this document.
+ - Embed docs and debugging symbols into the nuget package.
