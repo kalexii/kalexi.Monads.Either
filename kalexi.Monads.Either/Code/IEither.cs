@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Threading.Tasks;
 using kalexi.Monads.Either.Exceptions;
 
 namespace kalexi.Monads.Either.Code
 {
     /// <summary>
-    /// Either monad encapsulates the outcome that can be of two different types. Either <see cref="TLeft"/> or <see cref="TRight"/>.
+    /// Either monad encapsulates the outcome that can be of two different types. Either <typeparamref name="TLeft"/> or <typeparamref name="TRight"/>.
     /// </summary>
     [SuppressMessage("ReSharper", "ExceptionNotThrown")]
     public interface IEither<TLeft, TRight>
@@ -55,7 +54,7 @@ namespace kalexi.Monads.Either.Code
         /// Executes one of provided functions depending on which value is held in this instance of
         /// <see cref="IEither{TLeft,TRight}" /> and returns <see cref="IEither{TLeft,TRight}" /> as result.
         /// This overload exists to allow the calling code to omit specifying result type arguments if desired result types are
-        /// <see cref="TLeft" /> and <see cref="TRight" />.
+        /// <typeparamref name="TLeft"/> and <typeparamref name="TRight"/>.
         /// </summary>
         /// <param name="leftHandFunction">
         /// Function to execute if current instance of <see cref="IEither{TLeft,TRight}" />.
@@ -70,7 +69,7 @@ namespace kalexi.Monads.Either.Code
         /// of the current instance of <see cref="IEither{TLeft,TRight}" />.
         /// </returns>
         IEither<TLeft, TRight> NonAlteringMap(Func<TLeft, TLeft> leftHandFunction,
-                                              Func<TRight, TRight> rightHandAction);
+            Func<TRight, TRight> rightHandAction);
 
         /// <summary>
         /// Executes one of provided functions depending on which value is held in this instance of
@@ -89,17 +88,12 @@ namespace kalexi.Monads.Either.Code
         /// the value of the current instance of <see cref="IEither{TLeft,TRight}" />.
         /// </returns>
         IEither<TLeftResult, TRightResult> Map<TLeftResult, TRightResult>(Func<TLeft, TLeftResult> leftHandFunction,
-                                                                          Func<TRight, TRightResult> rightHandFunction);
-
-        /// <inheritdoc cref="Map{TLeftResult,TRightResult}"/>
-        Task<IEither<TLeftResult, TRightResult>> MapAsync<TLeftResult, TRightResult>(
-            Func<TLeft, Task<TLeftResult>> leftHandFunction,
-            Func<TRight, Task<TRightResult>> rightHandFunction);
+            Func<TRight, TRightResult> rightHandFunction);
 
 
         /// <summary>
         /// If current instance of <see cref="IEither{TLeft,TRight}" />.<see cref="IsLeft" />,
-        /// executes <see cref="action" /> passing <see cref="IEither{TLeft,TRight}" />.<see cref="Left" /> as argument.
+        /// executes <paramref name="action" /> passing <see cref="IEither{TLeft,TRight}" />.<see cref="Left" /> as argument.
         /// Otherwise, does nothing.
         /// </summary>
         /// <param name="action">
@@ -110,9 +104,9 @@ namespace kalexi.Monads.Either.Code
 
         /// <summary>
         /// If current instance of <see cref="IEither{TLeft,TRight}" />.<see cref="IsLeft" />,
-        /// executes <see cref="function" /> passing <see cref="IEither{TLeft,TRight}" />.<see cref="Left" /> as argument and
-        /// returns the result value of type <see cref="TResult" />.
-        /// Otherwise, returns <see cref="fallback" /> value.
+        /// executes <paramref name="function" /> passing <see cref="IEither{TLeft,TRight}" />.<see cref="Left" /> as argument and
+        /// returns the result value of type <typeparamref name="TResult" />.
+        /// Otherwise, returns <paramref name="fallback"/> value.
         /// </summary>
         /// <param name="function">
         /// Function to execute if current instance of <see cref="IEither{TLeft,TRight}" />.
@@ -122,11 +116,11 @@ namespace kalexi.Monads.Either.Code
         /// Value to return in case if current instance of <see cref="IEither{TLeft,TRight}" />.
         /// <see cref="IsRight" />.
         /// </param>
-        TResult DoWithLeft<TResult>(Func<TLeft, TResult> function, TResult fallback = default(TResult));
+        TResult DoWithLeft<TResult>(Func<TLeft, TResult> function, TResult fallback = default);
 
         /// <summary>
         /// If current instance of <see cref="IEither{TLeft,TRight}" />.<see cref="IsRight" />,
-        /// executes <see cref="action" /> passing <see cref="IEither{TLeft,TRight}" />.<see cref="Right" /> as argument.
+        /// executes <paramref name="action" /> passing <see cref="IEither{TLeft,TRight}" />.<see cref="Right" /> as argument.
         /// Otherwise, does nothing.
         /// </summary>
         /// <param name="action">
@@ -137,9 +131,9 @@ namespace kalexi.Monads.Either.Code
 
         /// <summary>
         /// If current instance of <see cref="IEither{TLeft,TRight}" />.<see cref="IsRight" />,
-        /// executes <see cref="function" /> passing <see cref="IEither{TLeft,TRight}" />.<see cref="Right" /> as argument and
-        /// returns the result value of type <see cref="TResult" />.
-        /// Otherwise, returns <see cref="fallback" /> value.
+        /// executes <paramref name="function" /> passing <see cref="IEither{TLeft,TRight}" />.<see cref="Right" /> as argument and
+        /// returns the result value of type <typeparamref name="TResult" />.
+        /// Otherwise, returns <paramref name="fallback" /> value.
         /// </summary>
         /// <param name="function">
         /// Function to execute if current instance of <see cref="IEither{TLeft,TRight}" />.
@@ -149,11 +143,11 @@ namespace kalexi.Monads.Either.Code
         /// Value to return in case if current instance of <see cref="IEither{TLeft,TRight}" />.
         /// <see cref="IsLeft" />.
         /// </param>
-        TResult DoWithRight<TResult>(Func<TRight, TResult> function, TResult fallback = default(TResult));
+        TResult DoWithRight<TResult>(Func<TRight, TResult> function, TResult fallback = default);
 
         /// <summary>
-        /// Transforms either <see cref="Left" /> or <see cref="Right" /> using <see cref="leftTransform" /> or
-        /// <see cref="rightTransform" /> correspondingly to produce value of a single type.
+        /// Transforms either <see cref="Left" /> or <see cref="Right" /> using <paramref name="leftTransform" /> or
+        /// <paramref name="rightTransform" /> correspondingly to produce value of a single type.
         /// </summary>
         /// <typeparam name="TResult">Type of produced value.</typeparam>
         /// <param name="leftTransform">
@@ -166,9 +160,5 @@ namespace kalexi.Monads.Either.Code
         /// </param>
         /// <returns>Joined value transformed from any value that is contained by this instance of <see cref="IEither{TLeft,TRight}"/>.</returns>
         TResult Join<TResult>(Func<TLeft, TResult> leftTransform, Func<TRight, TResult> rightTransform);
-
-        /// <inheritdoc cref="Join{TResult}"/>
-        Task<TResult> JoinAsync<TResult>(Func<TLeft, Task<TResult>> leftTransform,
-                                         Func<TRight, Task<TResult>> rightTransform);
     }
 }

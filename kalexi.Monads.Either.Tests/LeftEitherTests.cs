@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
-using NUnit.Framework;
 using kalexi.Monads.Either.Code;
 using kalexi.Monads.Either.Exceptions;
+using NUnit.Framework;
 
 namespace kalexi.Monads.Either.Tests
 {
@@ -23,9 +23,9 @@ namespace kalexi.Monads.Either.Tests
             => ValidateLeftEitherInterface(Either<string, int>.CreateLeft(value));
 
         [SuppressMessage("ReSharper", "SuggestBaseTypeForParameter")]
-        private void ValidateLeftEither(Either<string, int> either) => ValidateLeftEitherInterface(either);
+        private static void ValidateLeftEither(Either<string, int> either) => ValidateLeftEitherInterface(either);
 
-        private void ValidateLeftEitherInterface(IEither<string, int> either)
+        private static void ValidateLeftEitherInterface(IEither<string, int> either)
         {
             AssertIsValidLeftEither(either, value);
             AssertDoWithLeftAction(either);

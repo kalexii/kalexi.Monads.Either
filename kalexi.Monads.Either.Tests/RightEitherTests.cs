@@ -23,9 +23,9 @@ namespace kalexi.Monads.Either.Tests
             => ValidateRightEitherInterface(Either<int, string>.CreateRight(value));
 
         [SuppressMessage("ReSharper", "SuggestBaseTypeForParameter")]
-        private void ValidateRightEither(Either<int, string> either) => ValidateRightEitherInterface(either);
+        private static void ValidateRightEither(Either<int, string> either) => ValidateRightEitherInterface(either);
 
-        private void ValidateRightEitherInterface(IEither<int, string> either)
+        private static void ValidateRightEitherInterface(IEither<int, string> either)
         {
             AssertIsValidRightEither(either, value);
             AssertDoWithRightAction(either);
@@ -37,7 +37,7 @@ namespace kalexi.Monads.Either.Tests
             AssertJoin(either);
         }
 
-        private static void AssertJoin(IEither<int, string> either) 
+        private static void AssertJoin(IEither<int, string> either)
             => Assert.That(either.Join(x => 1338, x => 1337), Is.EqualTo(1337));
 
         private static void AssertDoWithRightFunction(IEither<int, string> either)

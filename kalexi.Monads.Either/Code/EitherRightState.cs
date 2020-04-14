@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using kalexi.Monads.Either.Exceptions;
 
 namespace kalexi.Monads.Either.Code
@@ -28,28 +27,20 @@ namespace kalexi.Monads.Either.Code
             Func<TRight, TRightResult> rightHandFunction)
             => new EitherRightState<TLeftResult, TRightResult>(rightHandFunction(Right));
 
-        public async Task<IEither<TLeftResult, TRightResult>> MapAsync<TLeftResult, TRightResult>(
-            Func<TLeft, Task<TLeftResult>> leftHandFunction, Func<TRight, Task<TRightResult>> rightHandFunction)
-            => new EitherRightState<TLeftResult, TRightResult>(await rightHandFunction(Right));
-
         public void DoWithLeft(Action<TLeft> action)
         {
         }
 
-        public TResult DoWithLeft<TResult>(Func<TLeft, TResult> function, TResult fallback = default(TResult))
+        public TResult DoWithLeft<TResult>(Func<TLeft, TResult> function, TResult fallback = default)
             => fallback;
 
         public void DoWithRight(Action<TRight> action)
             => action(Right);
 
-        public TResult DoWithRight<TResult>(Func<TRight, TResult> function, TResult fallback = default(TResult))
+        public TResult DoWithRight<TResult>(Func<TRight, TResult> function, TResult fallback = default)
             => function(Right);
 
         public TResult Join<TResult>(Func<TLeft, TResult> leftTransform, Func<TRight, TResult> rightTransform)
-            => rightTransform(Right);
-
-        public Task<TResult> JoinAsync<TResult>(Func<TLeft, Task<TResult>> leftTransform,
-            Func<TRight, Task<TResult>> rightTransform)
             => rightTransform(Right);
     }
 }

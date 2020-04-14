@@ -1,16 +1,28 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFrameworks>netstandard1.0;netcoreapp1.0;net45</TargetFrameworks>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Authors>kalexi</Authors>
-    <Company />
-    <Product />
-    <Description>Implementation of Either monad.</Description>
-    <PackageProjectUrl>https://github.com/kalexii/kalexi.Monads.Either</PackageProjectUrl>
-    <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/kalexii/kalexi.Monads.Either.git</RepositoryUrl>
-    <Version>1.0.1</Version>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFrameworks>netstandard1.0;net40</TargetFrameworks>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Authors>kalexi</Authors>
+        <Company />
+        <Product />
+        <Description>Implementation of Either monad.</Description>
+        <PackageProjectUrl>https://github.com/kalexii/kalexi.Monads.Either</PackageProjectUrl>
+        <RepositoryType>git</RepositoryType>
+        <RepositoryUrl>https://github.com/kalexii/kalexi.Monads.Either.git</RepositoryUrl>
+        <Version>1.0.1</Version>
+        <LangVersion>8</LangVersion>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+        <DocumentationFile>bin\Debug\kalexi.Monads.Either.xml</DocumentationFile>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+        <DocumentationFile>bin\Release\kalexi.Monads.Either.xml</DocumentationFile>
+    </PropertyGroup>
 
 </Project>

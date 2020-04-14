@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 
 namespace kalexi.Monads.Either.Code
 {
@@ -9,13 +8,13 @@ namespace kalexi.Monads.Either.Code
         private readonly IEither<TLeft, TRight> eitherState;
 
         /// <summary>
-        /// Initializes instance of <see cref="Either{TLeft,TRight}" /> with the left-hand <see cref="value" />.
+        /// Initializes instance of <see cref="Either{TLeft,TRight}" /> with the left-hand <paramref name="value" />.
         /// </summary>
         /// <param name="value">Left-hand value to initialize this instance of <see cref="IEither{TLeft,TRight}" /> with.</param>
         public Either(TLeft value) => eitherState = new EitherLeftState<TLeft, TRight>(value);
 
         /// <summary>
-        /// Initializes instance of <see cref="Either{TLeft,TRight}" /> with the right-hand <see cref="value" />.
+        /// Initializes instance of <see cref="Either{TLeft,TRight}" /> with the right-hand <paramref name="value" />.
         /// </summary>
         /// <param name="value">Right-hand value to initialize this instance of <see cref="IEither{TLeft,TRight}" /> with.</param>
         public Either(TRight value) => eitherState = new EitherRightState<TLeft, TRight>(value);
@@ -47,16 +46,11 @@ namespace kalexi.Monads.Either.Code
             => eitherState.Map(leftHandFunction, rightHandFunction);
 
         /// <inheritdoc />
-        public Task<IEither<TLeftResult, TRightResult>> MapAsync<TLeftResult, TRightResult>(
-            Func<TLeft, Task<TLeftResult>> leftHandFunction, Func<TRight, Task<TRightResult>> rightHandFunction)
-            => eitherState.MapAsync(leftHandFunction, rightHandFunction);
-
-        /// <inheritdoc />
         public void DoWithLeft(Action<TLeft> action)
             => eitherState.DoWithLeft(action);
 
         /// <inheritdoc />
-        public TResult DoWithLeft<TResult>(Func<TLeft, TResult> function, TResult fallback = default(TResult))
+        public TResult DoWithLeft<TResult>(Func<TLeft, TResult> function, TResult fallback = default)
             => eitherState.DoWithLeft(function, fallback);
 
         /// <inheritdoc />
@@ -64,37 +58,42 @@ namespace kalexi.Monads.Either.Code
             => eitherState.DoWithRight(action);
 
         /// <inheritdoc />
-        public TResult DoWithRight<TResult>(Func<TRight, TResult> function, TResult fallback = default(TResult))
+        public TResult DoWithRight<TResult>(Func<TRight, TResult> function, TResult fallback = default)
             => eitherState.DoWithRight(function, fallback);
 
         /// <inheritdoc />
         public TResult Join<TResult>(Func<TLeft, TResult> leftTransform, Func<TRight, TResult> rightTransform)
             => eitherState.Join(leftTransform, rightTransform);
 
-        /// <inheritdoc />
-        public Task<TResult> JoinAsync<TResult>(Func<TLeft, Task<TResult>> leftTransform,
-            Func<TRight, Task<TResult>> rightTransform)
-            => eitherState.JoinAsync(leftTransform, rightTransform);
-
+        /// <summary>
+        /// Implicitly bundles left <paramref name="value"/> into <see cref="Either{TLeft,TRight}"/>.
+        /// </summary>
+        /// <param name="value">Value to box into an <see cref="Either{TLeft,TRight}"/></param>
+        /// <returns><see cref="Either{TLeft,TRight}"/></returns>
         public static implicit operator Either<TLeft, TRight>(TLeft value)
             => new Either<TLeft, TRight>(value);
 
+        /// <summary>
+        /// Implicitly bundles right <paramref name="value"/> into <see cref="Either{TLeft,TRight}"/>.
+        /// </summary>
+        /// <param name="value">Value to box into an <see cref="Either{TLeft,TRight}"/></param>
+        /// <returns><see cref="Either{TLeft,TRight}"/></returns>
         public static implicit operator Either<TLeft, TRight>(TRight value)
             => new Either<TLeft, TRight>(value);
 
         /// <summary>
-        /// Creates an instance of <see cref="IEither{TLeft,TRight}" /> initialized with left-hand <see cref="value" />.
+        /// Creates an instance of <see cref="IEither{TLeft,TRight}" /> initialized with left-hand <paramref name="value" />.
         /// </summary>
         /// <param name="value">Left-hand value to initialize the instance of <see cref="IEither{TLeft,TRight}" /> with.</param>
-        /// <returns>An instance of <see cref="IEither{TLeft,TRight}" /> initialized with left-hand <see cref="value" /></returns>
+        /// <returns>An instance of <see cref="IEither{TLeft,TRight}" /> initialized with left-hand <paramref name="value" /></returns>
         public static IEither<TLeft, TRight> CreateLeft(TLeft value)
             => new EitherLeftState<TLeft, TRight>(value);
 
         /// <summary>
-        /// Creates an instance of <see cref="IEither{TLeft,TRight}" /> initialized with right-hand <see cref="value" />.
+        /// Creates an instance of <see cref="IEither{TLeft,TRight}" /> initialized with right-hand <paramref name="value" />.
         /// </summary>
         /// <param name="value">Right-hand value to initialize the instance of <see cref="IEither{TLeft,TRight}" /> with.</param>
-        /// <returns>An instance of <see cref="IEither{TLeft,TRight}" /> initialized with right-hand <see cref="value" /></returns>
+        /// <returns>An instance of <see cref="IEither{TLeft,TRight}" /> initialized with right-hand <paramref name="value" /></returns>
         public static IEither<TLeft, TRight> CreateRight(TRight value)
             => new EitherRightState<TLeft, TRight>(value);
     }
